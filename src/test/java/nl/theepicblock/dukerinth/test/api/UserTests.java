@@ -1,6 +1,5 @@
 package nl.theepicblock.dukerinth.test.api;
 
-import nl.theepicblock.dukerinth.ModrinthApi;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

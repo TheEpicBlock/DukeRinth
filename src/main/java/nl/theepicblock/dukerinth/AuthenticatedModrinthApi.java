@@ -1,7 +1,5 @@
 package nl.theepicblock.dukerinth;
 
-import lombok.NonNull;
-
 public class AuthenticatedModrinthApi {
     private final ModrinthApi source;
     private final String token;

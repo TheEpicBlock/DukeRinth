@@ -2,10 +2,7 @@ package nl.theepicblock.dukerinth.internal;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import nl.theepicblock.dukerinth.models.User;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -15,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.Flow;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @AllArgsConstructor
 public class GsonBodyHandler<T> implements HttpResponse.BodyHandler<T> {

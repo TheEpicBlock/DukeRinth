@@ -1,7 +1,5 @@
 package nl.theepicblock.dukerinth;
 
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
 import lombok.AllArgsConstructor;
 import nl.theepicblock.dukerinth.internal.GsonBodyHandler;
 import nl.theepicblock.dukerinth.internal.Util;
@@ -10,11 +8,9 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
