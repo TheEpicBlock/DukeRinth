@@ -5,7 +5,7 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import javax.management.relation.Role;
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 
 public class User {
@@ -48,7 +48,7 @@ public class User {
     /**
      * The time at which the user was created
      */
-    public Date created;
+    public Instant created;
     /**
      * The user’s role
      */

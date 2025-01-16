@@ -2,10 +2,12 @@ package nl.theepicblock.dukerinth;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import nl.theepicblock.dukerinth.internal.InstantSerializer;
 import org.jspecify.annotations.NonNull;
 
 import java.net.URI;
 import java.net.http.HttpClient;
+import java.time.Instant;
 
 public class ModrinthApi {
     protected final @NonNull URI baseUrl;
@@ -35,7 +37,9 @@ public class ModrinthApi {
         this.client = HttpClient
                 .newBuilder()
                 .build();
-        this.gson = new GsonBuilder().create();
+        this.gson = new GsonBuilder()
+                .registerTypeAdapter(Instant.class, new InstantSerializer())
+                .create();
         this.users = new UserRoute(this);
     }
 
