@@ -1,13 +1,14 @@
 package nl.theepicblock.dukerinth.test.api;
 
-import nl.theepicblock.dukerinth.models.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
 import java.time.Instant;
 import java.util.Collection;
 import java.util.function.Predicate;
 
+@EnabledIfEnvironmentVariable(named = "MR_API_TESTS", matches = "(true|TRUE)")
 public class UserTests {
     @Test
     public void getProspector() {
