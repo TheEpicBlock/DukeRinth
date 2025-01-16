@@ -3,6 +3,8 @@ package nl.theepicblock.dukerinth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import nl.theepicblock.dukerinth.internal.InstantSerializer;
+import nl.theepicblock.dukerinth.internal.RoleSerializer;
+import nl.theepicblock.dukerinth.models.Role;
 import org.jspecify.annotations.NonNull;
 
 import java.net.URI;
@@ -39,6 +41,7 @@ public class ModrinthApi {
                 .build();
         this.gson = new GsonBuilder()
                 .registerTypeAdapter(Instant.class, new InstantSerializer())
+                .registerTypeAdapter(Role.class, new RoleSerializer())
                 .create();
         this.users = new UserRoute(this);
     }

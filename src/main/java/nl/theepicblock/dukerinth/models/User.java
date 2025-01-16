@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import javax.management.relation.Role;
 import java.time.Instant;
 import java.util.List;
 
