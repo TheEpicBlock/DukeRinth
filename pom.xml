@@ -52,6 +52,14 @@
     </dependency>
   </dependencies>
 
+  <distributionManagement>
+    <repository>
+      <id>teb</id>
+      <name>TheEpicBlock's maven</name>
+      <url>https://maven.theepicblock.nl</url>
+    </repository>
+  </distributionManagement>
+
   <build>
     <plugins>
       <plugin>
