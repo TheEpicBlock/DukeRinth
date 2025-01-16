@@ -19,4 +19,14 @@ public class UserTests {
         Assertions.assertNull(pros.email);
         Assertions.assertNull(pros.payoutData);
     }
+
+    @Test
+    public void getBulk() {
+        var users = Util.CLIENT.users().getUsers("prospector", "geometrically");
+
+        Assertions.assertNotNull(users);
+        Assertions.assertEquals(2, users.size());
+        Assertions.assertEquals("Dc7EYhxG", users.get(0).id);
+        Assertions.assertEquals("MpxzqsyW", users.get(1).id);
+    }
 }

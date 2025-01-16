@@ -68,7 +68,7 @@ public class UserRoute {
             var u = getUser(ids[0]);
             return u == null ? List.of() : List.of(u);
         }
-        return getUsers(ids);
+        return getUsers(List.of(ids));
     }
 
     public List<@NonNull User> getUsers(List<@NonNull String> ids) {
@@ -87,8 +87,9 @@ public class UserRoute {
     }
 
     public List<@NonNull User> getUsers(Iterable<@NonNull String> ids) {
+        // TODO handle url encoding properly
         var builder = new StringBuilder();
-        builder.append("/v2/users?ids=[");
+        builder.append("/v2/users?ids=%5B");
         boolean first = true;
         for (var id : ids) {
             if (first) {
@@ -96,11 +97,11 @@ public class UserRoute {
             } else {
                 builder.append(",");
             }
-            builder.append('"');
+            builder.append("%22");
             builder.append(id);
-            builder.append('"');
+            builder.append("%22");
         }
-        builder.append('\"');
+        builder.append("%5D");
         return getUsersInternal(internalApi.baseUrl.resolve(builder.toString()));
     }
 
