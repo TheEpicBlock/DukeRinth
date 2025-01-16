@@ -1,6 +1,7 @@
 package nl.theepicblock.dukerinth;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.jspecify.annotations.NonNull;
 
 import java.net.URI;
@@ -34,6 +35,7 @@ public class ModrinthApi {
         this.client = HttpClient
                 .newBuilder()
                 .build();
+        this.gson = new GsonBuilder().create();
         this.users = new UserRoute(this);
     }
 

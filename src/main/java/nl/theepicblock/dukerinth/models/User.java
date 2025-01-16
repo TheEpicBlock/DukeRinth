@@ -1,5 +1,6 @@
 package nl.theepicblock.dukerinth.models;
 
+import com.google.gson.annotations.SerializedName;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -30,6 +31,7 @@ public class User {
     /**
      * Various data relating to the user’s payouts status (you can only see your own)
      */
+    @SerializedName("payout_data")
     @Nullable
     public PayoutData payoutData;
     /**
@@ -40,8 +42,9 @@ public class User {
     /**
      * The user’s avatar url
      */
+    @SerializedName("avatar_url")
     @NonNull
-    public String avatar_url;
+    public String avatarUrl;
     /**
      * The time at which the user was created
      */
@@ -68,22 +71,26 @@ public class User {
      *   "discord"
      * ]}
      */
-    public List<String> auth_providers;
+    @SerializedName("auth_providers")
+    public List<String> authProviders;
     /**
      * Whether your email is verified (only displayed if requesting your own account)
      */
+    @SerializedName("email_verified")
     @Nullable
-    public Boolean email_verified;
+    public Boolean emailVerified;
     /**
      * Whether you have a password associated with your account (only displayed if requesting your own account)
      */
+    @SerializedName("has_password")
     @Nullable
-    public Boolean has_password;
+    public Boolean hasPassword;
     /**
      * Whether you have TOTP two-factor authentication connected to your account (only displayed if requesting your own account)
      */
+    @SerializedName("has_totp")
     @Nullable
-    public Boolean has_totp;
+    public Boolean hasTotp;
 
     /**
      * Checks if the user has a badge
