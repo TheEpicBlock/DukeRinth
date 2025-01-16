@@ -1,9 +1,12 @@
 package nl.theepicblock.dukerinth.test.api;
 
+import nl.theepicblock.dukerinth.models.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.util.Collection;
+import java.util.function.Predicate;
 
 public class UserTests {
     @Test
@@ -25,7 +28,11 @@ public class UserTests {
 
         Assertions.assertNotNull(users);
         Assertions.assertEquals(2, users.size());
-        Assertions.assertEquals("Dc7EYhxG", users.get(0).id);
-        Assertions.assertEquals("MpxzqsyW", users.get(1).id);
+        assertOneMatches(users, u -> u.username.equalsIgnoreCase("prospector") && u.id.equals("Dc7EYhxG"));
+        assertOneMatches(users, u -> u.username.equalsIgnoreCase("geometrically") && u.id.equals("MpxzqsyW"));
+    }
+
+    private <T> void assertOneMatches(Collection<T> o, Predicate<T> f) {
+        Assertions.assertEquals(1, o.stream().filter(f).count());
     }
 }
