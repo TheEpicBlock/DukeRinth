@@ -19,6 +19,7 @@ public class ModrinthApi {
     protected final @NonNull Gson gson;
 
     private final @NonNull UserRoute users;
+    private final @NonNull ProjectRoute projects;
 
     public ModrinthApi(String userAgent) {
         this(userAgent, "https://api.modrinth.com/");
@@ -44,9 +45,14 @@ public class ModrinthApi {
                 .registerTypeAdapter(Role.class, new RoleSerializer())
                 .create();
         this.users = new UserRoute(this);
+        this.projects = new ProjectRoute(this);
     }
 
     public UserRoute users() {
         return this.users;
+    }
+
+    public ProjectRoute projects() {
+        return this.projects;
     }
 }
