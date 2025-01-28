@@ -1,5 +1,6 @@
 package nl.theepicblock.dukerinth.test.api;
 
+import nl.theepicblock.dukerinth.models.ProjectStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
@@ -16,5 +17,6 @@ public class ProjectTests {
         Assertions.assertNotEquals(0, modmenu.gameVersions.size());
         Assertions.assertTrue(modmenu.versions.contains("M3KFXLhq"));
         Assertions.assertNull(modmenu.moderatorMessage); // Don't think we can read that
+        Assertions.assertEquals(ProjectStatus.APPROVED, modmenu.status);
     }
 }
