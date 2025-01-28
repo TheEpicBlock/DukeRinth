@@ -7,3 +7,4 @@ Java wrapper around the Modrinth api. Currently incomplete. The following routes
    * Retrieval
    * Bulk retrieval
    * Get project members
+   * Get project's organization info

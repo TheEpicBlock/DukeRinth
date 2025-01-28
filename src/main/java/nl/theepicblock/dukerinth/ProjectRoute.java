@@ -4,7 +4,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import nl.theepicblock.dukerinth.internal.GsonBodyHandler;
 import nl.theepicblock.dukerinth.internal.Util;
-import nl.theepicblock.dukerinth.models.MemberInfo;
+import nl.theepicblock.dukerinth.models.Organization;
+import nl.theepicblock.dukerinth.models.TeamMember;
 import nl.theepicblock.dukerinth.models.Project;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -123,13 +124,17 @@ public class ProjectRoute {
         }
     }
 
-    public List<@NonNull MemberInfo> getProjectMembers(String id) {
+    /**
+     * Note, this does not give full ownership information. Must be combined with {@link #getProjectOrganization(String)}.
+     * Will return null if the request 404'd.
+     */
+    public List<@NonNull TeamMember> getProjectMembers(String id) {
         try {
-            HttpResponse<List<MemberInfo>> response = internalApi.client.send(
+            HttpResponse<List<TeamMember>> response = internalApi.client.send(
                     HttpRequest.newBuilder()
                             .GET()
-                            .uri(internalApi.baseUrl.resolve("/v2/project/" + id + "/members")).build(),
-                    GsonBodyHandler.ofList(MemberInfo.class, internalApi.gson)
+                            .uri(internalApi.baseUrl.resolve("/v3/project/" + id + "/members")).build(),
+                    GsonBodyHandler.ofList(TeamMember.class, internalApi.gson)
             );
             if (response.statusCode() == 404) {
                 return null;
@@ -143,12 +148,61 @@ public class ProjectRoute {
         }
     }
 
-    public CompletableFuture<List<@NonNull MemberInfo>> getProjectMembersAsync(String id) {
+    /**
+     * Note, this does not give full ownership information. Must be combined with {@link #getProjectOrganizationAsync(String)}.
+     * Will return null if the request 404'd.
+     */
+    public CompletableFuture<List<@NonNull TeamMember>> getProjectMembersAsync(String id) {
+        return internalApi.client.sendAsync(
+                HttpRequest.newBuilder()
+                        .GET()
+                        .uri(internalApi.baseUrl.resolve("/v3/project/" + id + "/members")).build(),
+                (GsonBodyHandler<? extends List<@NonNull TeamMember>>)GsonBodyHandler.ofList(TeamMember.class, internalApi.gson)
+        ).thenApply(response -> {
+            if (response.statusCode() == 404) {
+                return null;
+            } else if (Util.isOk(response.statusCode())) {
+                return response.body();
+            } else {
+                throw new ModrinthApiException(response);
+            }
+        });
+    }
+
+    /**
+     * Note, this does not give full ownership information. Must be combined with {@link #getProjectMembers(String)}.
+     * Will return null if the request 404'd.
+     */
+    public @Nullable Organization getProjectOrganization(String id) {
+        try {
+            var response = internalApi.client.send(
+                    HttpRequest.newBuilder()
+                            .GET()
+                            .uri(internalApi.baseUrl.resolve("/v2/project/" + id)).build(),
+                    new GsonBodyHandler<>(Organization.class, internalApi.gson)
+            );
+            if (response.statusCode() == 404) {
+                return null;
+            } else if (Util.isOk(response.statusCode())) {
+                return response.body();
+            } else {
+                throw new ModrinthApiException(response);
+            }
+        } catch (IOException | InterruptedException e) {
+            throw new InternalNetworkingException(e);
+        }
+    }
+
+    /**
+     * Note, this does not give full ownership information. Must be combined with {@link #getProjectMembersAsync(String)}.
+     * Will return null if the request 404'd.
+     */
+    public CompletableFuture<@Nullable Organization> getProjectOrganizationAsync(String id) {
         return internalApi.client.sendAsync(
                 HttpRequest.newBuilder()
                         .GET()
                         .uri(internalApi.baseUrl.resolve("/v2/project/" + id)).build(),
-                (GsonBodyHandler<? extends List<@NonNull MemberInfo>>)GsonBodyHandler.ofList(MemberInfo.class, internalApi.gson)
+                new GsonBodyHandler<>(Organization.class, internalApi.gson)
         ).thenApply(response -> {
             if (response.statusCode() == 404) {
                 return null;
