@@ -4,8 +4,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import nl.theepicblock.dukerinth.internal.GsonBodyHandler;
 import nl.theepicblock.dukerinth.internal.Util;
+import nl.theepicblock.dukerinth.models.MemberInfo;
 import nl.theepicblock.dukerinth.models.Project;
-import nl.theepicblock.dukerinth.models.User;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -121,5 +121,42 @@ public class ProjectRoute {
         } catch (IOException | InterruptedException e) {
             throw new InternalNetworkingException(e);
         }
+    }
+
+    public List<@NonNull MemberInfo> getProjectMembers(String id) {
+        try {
+            HttpResponse<List<MemberInfo>> response = internalApi.client.send(
+                    HttpRequest.newBuilder()
+                            .GET()
+                            .uri(internalApi.baseUrl.resolve("/v2/project/" + id + "/members")).build(),
+                    GsonBodyHandler.ofList(MemberInfo.class, internalApi.gson)
+            );
+            if (response.statusCode() == 404) {
+                return null;
+            } else if (Util.isOk(response.statusCode())) {
+                return response.body();
+            } else {
+                throw new ModrinthApiException(response);
+            }
+        } catch (IOException | InterruptedException e) {
+            throw new InternalNetworkingException(e);
+        }
+    }
+
+    public CompletableFuture<List<@NonNull MemberInfo>> getProjectMembersAsync(String id) {
+        return internalApi.client.sendAsync(
+                HttpRequest.newBuilder()
+                        .GET()
+                        .uri(internalApi.baseUrl.resolve("/v2/project/" + id)).build(),
+                (GsonBodyHandler<? extends List<@NonNull MemberInfo>>)GsonBodyHandler.ofList(MemberInfo.class, internalApi.gson)
+        ).thenApply(response -> {
+            if (response.statusCode() == 404) {
+                return null;
+            } else if (Util.isOk(response.statusCode())) {
+                return response.body();
+            } else {
+                throw new ModrinthApiException(response);
+            }
+        });
     }
 }
