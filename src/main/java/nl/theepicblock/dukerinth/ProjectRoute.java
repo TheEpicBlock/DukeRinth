@@ -178,7 +178,7 @@ public class ProjectRoute {
             var response = internalApi.client.send(
                     HttpRequest.newBuilder()
                             .GET()
-                            .uri(internalApi.baseUrl.resolve("/v2/project/" + id)).build(),
+                            .uri(internalApi.baseUrl.resolve("/v3/project/" + id + "/organization")).build(),
                     new GsonBodyHandler<>(Organization.class, internalApi.gson)
             );
             if (response.statusCode() == 404) {
@@ -201,7 +201,7 @@ public class ProjectRoute {
         return internalApi.client.sendAsync(
                 HttpRequest.newBuilder()
                         .GET()
-                        .uri(internalApi.baseUrl.resolve("/v2/project/" + id)).build(),
+                        .uri(internalApi.baseUrl.resolve("/v3/project/" + id + "/organization")).build(),
                 new GsonBodyHandler<>(Organization.class, internalApi.gson)
         ).thenApply(response -> {
             if (response.statusCode() == 404) {
