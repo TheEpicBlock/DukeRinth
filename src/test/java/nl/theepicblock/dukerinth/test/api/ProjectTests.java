@@ -1,5 +1,6 @@
 package nl.theepicblock.dukerinth.test.api;
 
+import nl.theepicblock.dukerinth.VersionFilter;
 import nl.theepicblock.dukerinth.models.ProjectStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -18,5 +19,13 @@ public class ProjectTests {
         Assertions.assertTrue(modmenu.versions.contains("M3KFXLhq"));
         Assertions.assertNull(modmenu.moderatorMessage); // Don't think we can read that
         Assertions.assertEquals(ProjectStatus.APPROVED, modmenu.status);
+    }
+
+    @Test
+    public void modMenuVersions() {
+        var oldVersions = Util.CLIENT.projects().getVersions("modmenu", VersionFilter.ofGameVersion("1.18.1"));
+        for (var v : oldVersions) {
+            Assertions.assertTrue(v.gameVersions.contains("1.18.1"));
+        }
     }
 }

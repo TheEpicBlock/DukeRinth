@@ -7,6 +7,7 @@ import nl.theepicblock.dukerinth.internal.Util;
 import nl.theepicblock.dukerinth.models.Organization;
 import nl.theepicblock.dukerinth.models.TeamMember;
 import nl.theepicblock.dukerinth.models.Project;
+import nl.theepicblock.dukerinth.models.Version;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -201,7 +202,7 @@ public class ProjectRoute {
         return internalApi.client.sendAsync(
                 HttpRequest.newBuilder()
                         .GET()
-                        .uri(internalApi.baseUrl.resolve("/v3/project/" + id + "/organization")).build(),
+                        .uri(internalApi.baseUrl.resolve("/v2/project/" + id + "/organization")).build(),
                 new GsonBodyHandler<>(Organization.class, internalApi.gson)
         ).thenApply(response -> {
             if (response.statusCode() == 404) {
@@ -212,5 +213,85 @@ public class ProjectRoute {
                 throw new ModrinthApiException(response);
             }
         });
+    }
+
+    public List<@NonNull Version> getVersions(String id, VersionFilter filter) {
+        try {
+            HttpResponse<List<Version>> response = internalApi.client.send(
+                    HttpRequest.newBuilder()
+                            .GET()
+                            .uri(internalApi.baseUrl.resolve(getVersionRoute(id, filter))).build(),
+                    GsonBodyHandler.ofList(Version.class, internalApi.gson)
+            );
+            if (response.statusCode() == 404) {
+                return null;
+            } else if (Util.isOk(response.statusCode())) {
+                return response.body();
+            } else {
+                throw new ModrinthApiException(response);
+            }
+        } catch (IOException | InterruptedException e) {
+            throw new InternalNetworkingException(e);
+        }
+    }
+
+    public CompletableFuture<List<@NonNull Version>> getVersionsAsync(String id, VersionFilter filter) {
+        return internalApi.client.sendAsync(
+                HttpRequest.newBuilder()
+                        .GET()
+                        .uri(internalApi.baseUrl.resolve(getVersionRoute(id, filter))).build(),
+                (GsonBodyHandler<? extends List<@NonNull Version>>)GsonBodyHandler.ofList(Version.class, internalApi.gson)
+        ).thenApply(response -> {
+            if (response.statusCode() == 404) {
+                return null;
+            } else if (Util.isOk(response.statusCode())) {
+                return response.body();
+            } else {
+                throw new ModrinthApiException(response);
+            }
+        });
+    }
+
+    private String getVersionRoute(String projId, VersionFilter filter) {
+        var base = "/v2/project/"+projId+"/version";
+        if (filter.featured == null && filter.gameVersions == null && filter.loaders == null) {
+            return base;
+        }
+        base += "?";
+        var first = true;
+        if (filter.featured != null) {
+            base += "featured="+filter.featured;
+            first = false;
+        }
+        if (filter.loaders != null) {
+            if (!first) base += "&";
+            base += "loaders="+urlEncodeList(filter.loaders);
+            first = false;
+        }
+        if (filter.gameVersions != null) {
+            if (!first) base += "&";
+            base += "game_versions="+urlEncodeList(filter.gameVersions);
+            first = false;
+        }
+        return base;
+    }
+
+    private String urlEncodeList(Iterable<String> iterable) {
+        // TODO handle url encoding properly
+        var builder = new StringBuilder();
+        builder.append("%5B");
+        boolean first = true;
+        for (var value : iterable) {
+            if (first) {
+                first = false;
+            } else {
+                builder.append(",");
+            }
+            builder.append("%22");
+            builder.append(value);
+            builder.append("%22");
+        }
+        builder.append("%5D");
+        return builder.toString();
     }
 }
