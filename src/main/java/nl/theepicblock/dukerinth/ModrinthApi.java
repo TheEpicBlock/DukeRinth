@@ -55,4 +55,8 @@ public class ModrinthApi {
     public ProjectRoute projects() {
         return this.projects;
     }
+
+    public AuthenticatedRoutes withAuth(String token) {
+        return new AuthenticatedRoutes(this, token);
+    }
 }
